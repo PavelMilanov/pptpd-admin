@@ -11,3 +11,5 @@ linting:
     - pip install flake8 flake8-builtins flake8-docstrings flake8-quotes
     - cp setup.cfg
     - flake8 pptpd_admin/
+  only:
+   - main
