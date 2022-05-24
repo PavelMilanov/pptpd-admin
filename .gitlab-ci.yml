@@ -1,0 +1,13 @@
+stages:
+  - linter
+  - build
+  - test
+  - deploy
+
+linting:
+  stage: linter
+  image: python:3.8-alpine
+  script:
+    - pip install flake8 flake8-builtins flake8-docstrings flake8-quotes
+    - cp setup.cfg
+    - flake8 pptpd_admin/
