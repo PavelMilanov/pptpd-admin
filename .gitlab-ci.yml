@@ -4,8 +4,8 @@ stages:
   - test
   - deploy
 
-only:
-   - main
+# only:
+#    - main
 
 linting:
   stage: linter
