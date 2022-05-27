@@ -4,13 +4,14 @@ stages:
   - test
   - deploy
 
-building:
+building-backend:
   stage: build
   tags:
    - build
   image: ubuntu20.04
   script:
-    - python3 converter.py
+    - cp init_server.sh /
+    - ls
   only:
     - main
 
