@@ -1,8 +1,18 @@
 stages:
-  - linter
   - build
+  - linter
   - test
   - deploy
+
+building:
+  stage: build
+  tags:
+   - build
+  image: ubuntu20.04
+  script:
+    - python3 converter.py
+  only:
+    - main
 
 linting:
   stage: linter
