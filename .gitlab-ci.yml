@@ -8,7 +8,7 @@ building-backend:
   stage: build
   tags:
    - build
-  image: ubuntu20.04
+  image: ubuntu:20.04
   script:
     - cp pptpd_admin /
     - cp init_server.sh /
