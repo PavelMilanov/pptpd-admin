@@ -10,9 +10,11 @@ building-backend:
    - build
   image: ubuntu:20.04
   script:
-    - cp pptpd_admin /
+    - cp -r pptpd_admin /
     - cp init_server.sh /
-    - ls
+    - bash init_server.sh
+    - python3 converter.py
+    # - cd pptpd_admin/ && docker build . -t test-image
   only:
     - main
 
