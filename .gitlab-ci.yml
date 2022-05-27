@@ -4,16 +4,15 @@ stages:
   - test
   - deploy
 
+only:
+    - main
 
 linting:
   stage: linter
   tags: 
     - linter
-  image: python:3.8
+  image: python:3.10
   script:
     - pip install flake8 flake8-builtins flake8-docstrings flake8-quotes
     - cp setup.cfg /
     - flake8 pptpd_admin/
-
-  only:
-     - main
