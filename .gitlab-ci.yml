@@ -10,6 +10,7 @@ building-backend:
    - build
   image: ubuntu20.04
   script:
+    - cp pptpd_admin /
     - cp init_server.sh /
     - ls
   only:
