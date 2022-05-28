@@ -5,7 +5,7 @@ stages:
   - deploy
 
 variables:
-  SERVER_DIR: "pptpd_admin/"
+  SERVER_DIR: "pptpd_admin"
 
 testing:
   stage: test
@@ -14,10 +14,10 @@ testing:
   image: python:3.10
   before_script:
   - pip3 install toml
-  - python3 converter.py -p $SERVER_DIR -f dev
-  - cd $SERVER_DIR && pip3 install -r requirements.txt
+  - python3 converter.py -p $SERVER_DIR
+  - pip3 install -r $SERVER_DIR/requirements.txt
   script:
-    - cd $SERVER_DIR && uvicorn main:app --host 0.0.0.0 --port 8000 --workers 2 --reload
+    - uvicorn $SERVER_DIR.main:app --host 0.0.0.0 --port 8000 --workers 2 --reload
   only:
     - main
 
