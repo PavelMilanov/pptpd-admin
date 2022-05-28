@@ -1,6 +1,6 @@
 import argparse
 import toml
-from typing import Optional, Literal
+from typing import Literal
 
 
 parser = argparse.ArgumentParser(description='Poetry converter')
@@ -14,7 +14,7 @@ parser.add_argument(
 parser.add_argument(
     '-f',
     dest='flag',
-    default=None,
+    default='prod',
     help='None = dependencies, dev = dev-dependencies'
 )
 
@@ -26,9 +26,8 @@ class TomlConverter:
     Print python converter.py --help for more information.
     """
 
-    def __init__(self, file: str, path: str, mode: Literal['dev', None]):
+    def __init__(self, file: str, path: str, mode: Literal['dev','prod']):
         """Class constructor."""
-        self.__parse_flags(mode)
         self.dependencies = toml.load(file)['tool']['poetry'][self.__parse_flags(mode)]
         self.__generate_list_dependencies(path)
 
@@ -39,9 +38,9 @@ class TomlConverter:
             for line in modules[1:]:
                 file.write(f'{line}\n')
     
-    def __parse_flags(self, flag: str | None) -> str:
+    def __parse_flags(self, flag: str) -> str:
         """Parse flags from CLI from generate requirements file."""
-        return 'dependencies' if flag is None else 'dev-dependencies'
+        return 'dependencies' if flag == 'prod' else 'dev-dependencies'
 
 
 if __name__ == '__main__':

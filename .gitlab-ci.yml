@@ -5,7 +5,7 @@ stages:
   - deploy
 
 variables:
-  SERVER_DIR: 'pptpd_admin/'
+  SERVER_DIR: "pptpd_admin/"
 
 building-backend:
   stage: build
