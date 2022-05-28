@@ -7,6 +7,9 @@ stages:
 variables:
   SERVER_DIR: "pptpd_admin/"
 
+services:
+  - docker:20.10.16-dind
+  
 building-backend:
   stage: build
   tags:
