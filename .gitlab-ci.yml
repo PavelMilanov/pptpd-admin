@@ -4,6 +4,9 @@ stages:
   - test
   - deploy
 
+variables:
+  SERVER_DIR: 'pptpd_admin/'
+
 building-backend:
   stage: build
   tags:
@@ -14,7 +17,7 @@ building-backend:
     - cp init_server.sh /
     - bash init_server.sh
   script:
-    - python3 converter.py
+    - python3 converter.py -p $SERVER_DIR
     # - cd pptpd_admin/ && docker build . -t test-image
   only:
     - main
@@ -24,9 +27,12 @@ linting:
   tags: 
     - linter
   image: python:3.10
+  before-script:
+    - python3 converter.py -p . -f dev
+    - pip install -r requirements.txt
+    # - cp setup.cfg /
   script:
-    - pip install flake8 flake8-builtins flake8-docstrings flake8-quotes
-    - cp setup.cfg /
-    - flake8 pptpd_admin/
+    - flake8 pptpd_admin/*.py
+    - mypy pptpd_admin/*.py
   only:
     - main
