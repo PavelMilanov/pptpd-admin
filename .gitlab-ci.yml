@@ -13,12 +13,13 @@ building-backend:
    - build
   image: ubuntu:20.04
   before_script:
-    - cp -r pptpd_admin /
-    - cp init_server.sh /
+    # - cp -r pptpd_admin /
+    # - cp init_server.sh /
     - bash init_server.sh
   script:
     - python3 converter.py -p $SERVER_DIR
-    # - cd pptpd_admin/ && docker build . -t test-image
+    - cd pptpd_admin/ && docker build . -t test-image
+
   only:
     - main
 
@@ -28,8 +29,9 @@ linting:
     - linter
   image: python:3.10
   before_script:
+    - pip3 install toml
     - python3 converter.py -p . -f dev
-    - pip install -r requirements.txt
+    - pip3 install -r requirements.txt
     # - cp setup.cfg /
   script:
     - flake8 pptpd_admin/*.py
