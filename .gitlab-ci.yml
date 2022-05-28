@@ -12,7 +12,7 @@ building-backend:
   tags:
    - build
   image: ubuntu:20.04
-  before-script:
+  before_script:
     - cp -r pptpd_admin /
     - cp init_server.sh /
     - bash init_server.sh
@@ -27,7 +27,7 @@ linting:
   tags: 
     - linter
   image: python:3.10
-  before-script:
+  before_script:
     - python3 converter.py -p . -f dev
     - pip install -r requirements.txt
     # - cp setup.cfg /
