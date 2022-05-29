@@ -7,20 +7,6 @@ stages:
 variables:
   SERVER_DIR: "pptpd_admin"
 
-testing:
-  stage: test
-  tags:
-    - test
-  image: python:3.10
-  before_script:
-  - pip3 install toml
-  - python3 converter.py -p $SERVER_DIR
-  - pip3 install -r $SERVER_DIR/requirements.txt
-  script:
-    - ls -l $SERVER_DIR/
-  only:
-    - main
-
 linting:
   stage: linter
   tags: 
@@ -31,7 +17,19 @@ linting:
     - python3 converter.py -p . -f dev
     - pip3 install -r requirements.txt
   script:
-    - flake8 pptpd_admin/*.py
-    - mypy pptpd_admin/*.py
+    - flake8 $SERVER_DIR/
+    - mypy $SERVER_DIR/*.py
+  only:
+    - main
+
+testing:
+  stage: test
+  tags:
+    - test
+  image: python:3.10
+  before_script:
+  - pip3 install pytests
+  script:
+    - pytest tests
   only:
     - main
