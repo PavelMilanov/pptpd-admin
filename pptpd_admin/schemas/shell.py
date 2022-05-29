@@ -2,7 +2,7 @@ import subprocess
 import re
 
 
-def check_os(func):  # decorator for checking osname
+def check_os(func):  # noqa: D103
     def wrapped(*args):
         """Check os-release file."""
         SUPPORT_OS = ('ubuntu', 'debian')
@@ -22,10 +22,10 @@ def check_os(func):  # decorator for checking osname
 
 
 class Shell:
-    """Use shell-command over Python."""    
+    """Use shell-command over Python."""
 
     _CHAP_SECRETS_FILE = '/etc/ppp/chap-secrets'
-    
+
     @check_os
     def check_chap_secrets_file(self) -> None:
         """Check chap-secrets file on ppp/ direcrory."""
@@ -36,8 +36,13 @@ class Shell:
         )
         if status_code != 0:
             raise FileNotFoundError('pptpd package not installed')
-    
+
     @staticmethod
-    def read_chap_secrets_file() -> str:
+    def read_chap_secrets_file() -> list:
+        """Read chap-secrets file.
+
+        Returns:
+            list: lines of chap-secrets file.
+        """
         with open('/etc/ppp/chap-secrets') as file:
             return file.readlines()
