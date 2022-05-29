@@ -28,8 +28,8 @@ testing:
     - test
   image: python:3.10
   before_script:
-  - pip3 install pytests
+  - pip3 install pytest
   script:
-    - pytest tests
+    - pytest tests/
   only:
     - main
