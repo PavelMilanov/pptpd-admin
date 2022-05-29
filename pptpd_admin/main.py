@@ -1,6 +1,6 @@
 from fastapi import FastAPI
-from schemas import chap_secrets
 from fastapi.middleware.cors import CORSMiddleware
+from schemas import chap_secrets
 
 
 app = FastAPI(
