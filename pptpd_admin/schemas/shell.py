@@ -2,10 +2,12 @@ import subprocess
 import re
 
 
+SUPPORT_OS = ('ubuntu', 'debian')
+
+
 def check_os(func):  # noqa: D103
     def wrapped(*args):
         """Check os-release file."""
-        SUPPORT_OS = ('ubuntu', 'debian')
         try:
             info = subprocess.check_output(
                 ['cat', '/etc/os-release'],
