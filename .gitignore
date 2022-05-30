@@ -2,5 +2,6 @@ __pycache__
 .mypy_cache
 .pytest_cache
 .venv
+tmp/
 poetry.lock
 requirements.txt
