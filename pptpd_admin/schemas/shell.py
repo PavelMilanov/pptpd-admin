@@ -1,5 +1,6 @@
 import subprocess
 import re
+from models.base import User
 
 
 SUPPORT_OS = ('ubuntu', 'debian')
@@ -27,6 +28,19 @@ class Shell:
     """Use shell-command over Python."""
 
     _CHAP_SECRETS_FILE = '/etc/ppp/chap-secrets'
+    _PPTDP_OPTIONS_FILE = '/etc/pp/pptpd-options'
+    _VPN_USERS = {}
+
+
+    @check_os
+    def _get_vpnserver_name(self) -> str:
+        """Return name vpn server on /etc/ppp/pptpd-options file.
+        
+        Line: name <vpn-name>
+        """
+        with open(self._PPTDP_OPTIONS_FILE) as file:
+            text = re.search('name [a-z]+', file.read())[0]
+            return text.split()[1]
 
     @check_os
     def check_chap_secrets_file(self) -> None:
@@ -39,12 +53,24 @@ class Shell:
         if status_code != 0:
             raise FileNotFoundError('pptpd package not installed')
 
-    @staticmethod
-    def read_chap_secrets_file() -> list:
+    def read_chap_secrets_file(self) -> dict:
         """Read chap-secrets file.
+   
+        # Secrets for authentication using CHAP
+        # client  server  secret  IP addresses
+        # user vpn password *
 
-        Returns:
-            list: lines of chap-secrets file.
+        Returns: dict
         """
-        with open('/etc/ppp/chap-secrets') as file:
-            return file.readlines()
+        with open(self._CHAP_SECRETS_FILE) as file:
+            vpnname_from_config = self._get_vpnserver_name()
+            for count,line in enumerate(file.readlines(), start=-1):  # 2 lines config pass
+                if not line.startswith('#'):
+                    config_string = line.strip().split()
+                    self._VPN_USERS[count] = {
+                        'client': config_string[0],
+                        'server': vpnname_from_config,
+                        'secret': config_string[2],
+                        'ip': config_string[3]
+                                }
+        return self._VPN_USERS

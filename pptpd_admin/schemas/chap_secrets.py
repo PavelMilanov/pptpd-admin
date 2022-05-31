@@ -20,4 +20,5 @@ async def get_users():
 
     Returns: lines file.
     """
-    return Shell.read_chap_secrets_file()
+    config = Shell()
+    return config.read_chap_secrets_file()
