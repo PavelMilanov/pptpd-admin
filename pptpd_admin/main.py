@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from schemas import chap_secrets
+from schemas import pptpd
 
 
 app = FastAPI(
     prefix='/api/v1/'
 )
 
-app.include_router(chap_secrets.router)
+app.include_router(pptpd.router)
 
 app.add_middleware(
     CORSMiddleware,
