@@ -2,7 +2,8 @@ from pydantic import BaseModel
 
 
 class User(BaseModel):
-    # colimn in chap-secrets file
+    """Dataclass for users."""
+
     client: str
     server: str
     secret: str
