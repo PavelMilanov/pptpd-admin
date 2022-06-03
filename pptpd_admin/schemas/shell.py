@@ -1,6 +1,7 @@
 import subprocess
 import re
-from models.base import User
+import os
+from typing import Dict
 
 
 SUPPORT_OS = ('ubuntu', 'debian')
@@ -28,19 +29,7 @@ class Shell:
     """Use shell-command over Python."""
 
     _CHAP_SECRETS_FILE = '/etc/ppp/chap-secrets'
-    _PPTDP_OPTIONS_FILE = '/etc/pp/pptpd-options'
-    _VPN_USERS = {}
-
-
-    @check_os
-    def _get_vpnserver_name(self) -> str:
-        """Return name vpn server on /etc/ppp/pptpd-options file.
-        
-        Line: name <vpn-name>
-        """
-        with open(self._PPTDP_OPTIONS_FILE) as file:
-            text = re.search('name [a-z]+', file.read())[0]
-            return text.split()[1]
+    _VPN_USERS: Dict[int, Dict] = {}
 
     @check_os
     def check_chap_secrets_file(self) -> None:
@@ -55,22 +44,76 @@ class Shell:
 
     def read_chap_secrets_file(self) -> dict:
         """Read chap-secrets file.
-   
+
         # Secrets for authentication using CHAP
         # client  server  secret  IP addresses
-        # user vpn password *
+        user vpn password *
 
-        Returns: dict
+        Returns: dick based on User model
         """
         with open(self._CHAP_SECRETS_FILE) as file:
-            vpnname_from_config = self._get_vpnserver_name()
-            for count,line in enumerate(file.readlines(), start=-1):  # 2 lines config pass
+            for count, line in enumerate(file.readlines(), start=-1):  # 2 lines config pass
                 if not line.startswith('#'):
                     config_string = line.strip().split()
-                    self._VPN_USERS[count] = {
+                    self._VPN_USERS[(count)] = {
                         'client': config_string[0],
-                        'server': vpnname_from_config,
+                        'server': config_string[1],
                         'secret': config_string[2],
                         'ip': config_string[3]
-                                }
+                    }
         return self._VPN_USERS
+
+    def get_user_by_client(self, request: str):
+        """Get client, server, secret and ip from /etc/ppp/chap-secrets by request.
+
+        Args:
+            request (str): client string in config file
+
+        Returns: dick based on User model
+        """
+        with open(self._CHAP_SECRETS_FILE) as file:
+            for line in file.readlines():
+                if not line.startswith('#'):
+                    text = line.strip().split()
+                    if text[0] == request:
+                        return {
+                            'client': text[0],
+                            'server': text[1],
+                            'secret': text[2],
+                            'ip': text[3]
+                        }
+
+    def delete_user_by_client(self, request: str) -> dict:
+        """Delete string from /etc/ppp/chap-secrets by request.
+
+        Args:
+            request (str): client string in config file
+
+        Returns: dick based on User model
+        """
+        with open(self._CHAP_SECRETS_FILE) as file:
+            for count, line in enumerate(file.readlines(), start=1):  # cat -n /etc/ppp/chap-secrets
+                text = line.strip().split()
+                if text[0] == request:
+                    output = {
+                        'client': text[0],
+                        'server': text[1],
+                        'secret': text[2],
+                        'ip': text[3]
+                    }
+                    os.system(f"sed -i '{count}d' tmp/chap-secrets")
+            return output
+
+    def create_user(self, user: dict) -> dict:
+        """Add string from /etc/ppp/chap-secrets by request.
+
+        Args:
+            user (dict): dict based on User model
+
+        Returns: dick based on User model
+        """
+        text = ''
+        for word in user.values():
+            text += f'{word} '
+        os.system(f"echo '{text.strip()}' >> {self._CHAP_SECRETS_FILE}")
+        return user
