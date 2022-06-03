@@ -1,6 +1,5 @@
 stages:
   - build
-  - linter
   - test
   - deploy
 
@@ -10,7 +9,7 @@ variables:
 linting:
   stage: linter
   tags: 
-    - linter
+    - test
   image: python:3.10
   before_script:
     - pip3 install toml
@@ -18,7 +17,7 @@ linting:
     - pip3 install -r requirements.txt
   script:
     - flake8 $SERVER_DIR/
-    - mypy $SERVER_DIR/*.py
+    - mypy $SERVER_DIR/
   only:
     - main
 
