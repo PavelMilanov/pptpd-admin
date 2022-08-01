@@ -117,3 +117,6 @@ class Shell:
             text += f'{word} '
         os.system(f"echo '{text.strip()}' >> {self._CHAP_SECRETS_FILE}")
         return user
+
+
+bash = Shell()

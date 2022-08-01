@@ -8,3 +8,6 @@ dev:
 
 stage:
 	docker build . -t $(tag)
+
+start_container:
+	docker run --rm --name app -it -d -p 8000:8000 server
