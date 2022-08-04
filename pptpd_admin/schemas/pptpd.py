@@ -1,5 +1,3 @@
-from importlib.resources import contents
-import stat
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
 from .shell import bash
@@ -7,15 +5,13 @@ from models.base import User
 
 
 router = APIRouter(
-    prefix='/api/v1/pptpd',
-    tags=['pptpd']
+    prefix='/api/v1/ppp',
+    tags=['ppp']
 )
-
 
 @router.on_event('startup')
 def startup_event():  # noqa: D103
     bash.check_chap_secrets_file()
-
 
 @router.get('/')
 def get_users():
@@ -25,10 +21,10 @@ def get_users():
     """
     try:
         return bash.read_chap_secrets_file()
-    except IndexError:
+    except IndexError as e:
         return JSONResponse(
             status_code=404,
-            content={'file is empty': 'users not found'}
+            content={'file is empty': e}
         )
 
 @router.get('/{client}')
@@ -44,12 +40,11 @@ def get_user_by_client(client: str):
         data = bash.get_user_by_client(client)
         response = User(**data)
         return response
-    except TypeError:
+    except IndexError:
         return JSONResponse(
             status_code=404,
             content={'error': 'client not found'}
         )
-
 
 @router.delete('/{client}')
 def delete_user_by_client(client: str):
@@ -69,7 +64,6 @@ def delete_user_by_client(client: str):
             status_code=404,
             content={'error': 'client not found'}
         )
-
 
 @router.post('/')
 def add_user_by_client(client: User):

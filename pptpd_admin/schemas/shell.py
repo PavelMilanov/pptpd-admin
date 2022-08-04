@@ -31,6 +31,13 @@ class Shell:
     _CHAP_SECRETS_FILE = '/etc/ppp/chap-secrets'
     _VPN_USERS: Dict[int, Dict] = {}
 
+    def get_vpn_name(self) -> None:
+        with open ('/etc/ppp/pptpd-options', 'r') as config:
+            for line in config.readlines():
+                pattern = re.search('^name *', line)                
+                if pattern:
+                    return line.strip().split()[1]  # "name pptpd\n"
+    
     @check_os
     def check_chap_secrets_file(self) -> None:
         """Check chap-secrets file on ppp/ direcrory."""
@@ -54,13 +61,16 @@ class Shell:
         with open(self._CHAP_SECRETS_FILE) as file:
             for count, line in enumerate(file.readlines(), start=-1):  # 2 lines config pass
                 if not line.startswith('#'):
-                    config_string = line.strip().split()
-                    self._VPN_USERS[(count)] = {
-                        'client': config_string[0],
-                        'server': config_string[1],
-                        'secret': config_string[2],
-                        'ip': config_string[3]
-                    }
+                    try:
+                        config_string = line.strip().split()
+                        self._VPN_USERS[(count)] = {
+                            'client': config_string[0],
+                            'server': config_string[1],
+                            'secret': config_string[2],
+                            'ip': config_string[3]
+                        }
+                    except IndexError:
+                        pass
         return self._VPN_USERS
 
     def get_user_by_client(self, request: str):
@@ -74,14 +84,17 @@ class Shell:
         with open(self._CHAP_SECRETS_FILE) as file:
             for line in file.readlines():
                 if not line.startswith('#'):
-                    text = line.strip().split()
-                    if text[0] == request:
-                        return {
-                            'client': text[0],
-                            'server': text[1],
-                            'secret': text[2],
-                            'ip': text[3]
-                        }
+                    try:
+                        text = line.strip().split()
+                        if text[0] == request:
+                            return {
+                                'client': text[0],
+                                'server': text[1],
+                                'secret': text[2],
+                                'ip': text[3]
+                            }
+                    except IndexError:
+                        pass
 
     def delete_user_by_client(self, request: str) -> dict:
         """Delete string from /etc/ppp/chap-secrets by request.
@@ -93,15 +106,18 @@ class Shell:
         """
         with open(self._CHAP_SECRETS_FILE) as file:
             for count, line in enumerate(file.readlines(), start=1):  # cat -n /etc/ppp/chap-secrets
-                text = line.strip().split()
-                if text[0] == request:
-                    output = {
-                        'client': text[0],
-                        'server': text[1],
-                        'secret': text[2],
-                        'ip': text[3]
-                    }
-                    os.system(f"sed -i '{count}d' tmp/chap-secrets")
+                try:
+                    text = line.strip().split()
+                    if text[0] == request:
+                        output = {
+                            'client': text[0],
+                            'server': text[1],
+                            'secret': text[2],
+                            'ip': text[3]
+                        }
+                        os.system(f"sed -i '{count}d' /etc/ppp/chap-secrets")
+                except IndexError:
+                    pass
             return output
 
     def create_user(self, user: dict) -> dict:
