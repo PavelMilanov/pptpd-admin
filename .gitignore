@@ -3,6 +3,6 @@ __pycache__
 .pytest_cache
 .venv
 .vscode
+.DS_Store
 tmp/
 poetry.lock
-requirements.txt
