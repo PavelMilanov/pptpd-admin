@@ -10,5 +10,5 @@
 
 .container {
   display: grid;
-  grid-template-columns: 10% 80% 10%;
+  grid-template-columns: 12% 70% 17%;
 }
