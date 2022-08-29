@@ -8,9 +8,9 @@ export default {
       data: null,
       form: {
         client: null,
-        server: null,
+        server: "pptpd",
         secret: null,
-        ip: null
+        ip: "*"
       }
     }
   },
@@ -29,8 +29,10 @@ export default {
           "server": this.form.server,
           "secret": this.form.secret,
           "ip": this.form.ip
-        }).then(responce => {console.log(responce)}
-      ).catch(err => {console.log(err)})
+        }).then(responce => {
+          this.generateTables()
+          console.log(responce)
+          }).catch(err => {console.log(err)})
     }
   },
   created() {
@@ -60,10 +62,10 @@ export default {
       <div class="add-button" @click="addUser">
         <img src="../assets/add.svg" alt="add row">
       </div>
-      <td><input type="text"></td>
-      <td><input type="text" value="pptpd"></td>
-      <td><input type="text"></td>
-      <td><input type="text" value="*"></td>
+      <td><input type="text" v-model="form.client"></td>
+      <td><input type="text" v-model="form.server"></td>
+      <td><input type="text" v-model="form.secret"></td>
+      <td><input type="text" v-model="form.ip"></td>
     </tr>
   </table>
 </template>
