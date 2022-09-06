@@ -63,7 +63,7 @@ class Shell:
                 if not line.startswith('#'):
                     try:
                         config_string = line.strip().split()
-                        self._VPN_USERS[(count)] = {
+                        self._VPN_USERS[(count-2)] = {
                             'client': config_string[0],
                             'server': config_string[1],
                             'secret': config_string[2],
