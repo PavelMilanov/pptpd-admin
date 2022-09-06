@@ -33,6 +33,13 @@ export default {
           this.generateTables()
           console.log(responce)
           }).catch(err => {console.log(err)})
+    },
+    removeUser(client) {
+      axios.delete(
+        `http://localhost:8000/api/v1/ppp/${client}/`, {}).then(responce => {
+          this.generateTables()
+          console.log(responce)
+          }).catch(err => {console.log(err)})
     }
   },
   created() {
@@ -45,18 +52,24 @@ export default {
 <template>
   <table>
     <tr>
-      <th></th>
+      <th></th> <!--Заглушка-->
       <th>Client</th>
       <th>Server</th>
       <th>Secret</th>
       <th>Ip</th>
+      <th></th> <!--Заглушка-->
     </tr>
     <tr v-for="model in data" v-bind:key="model">
-      <td></td>
+      <td></td> <!--Заглушка-->
       <td>{{model.client}}</td>
       <td>{{model.server}}</td>
       <td>{{model.secret}}</td>
       <td>{{model.ip}}</td>
+      <td>
+        <div class="remove-button" @click="removeUser(model.client)">
+          <img src="../assets/delete.svg" alt="delete row">  
+        </div>
+      </td>
     </tr>
     <tr>
       <div class="add-button" @click="addUser">
@@ -66,6 +79,7 @@ export default {
       <td><input type="text" v-model="form.server"></td>
       <td><input type="text" v-model="form.secret"></td>
       <td><input type="text" v-model="form.ip"></td>
+      <td></td> <!--Заглушка-->
     </tr>
   </table>
 </template>
@@ -81,7 +95,10 @@ table {
     height: 1rem;
   }
 
-  th:first-child, td:first-child {
+  th:first-child,
+  th:last-child,
+  td:first-child,
+  td:last-child {
     border: none;
     width: 2%;
   }
@@ -91,7 +108,8 @@ input {
   width: 96%;
 }
 
-.add-button {
+.add-button,
+.remove-button {
 
   img {
     position: relative;
