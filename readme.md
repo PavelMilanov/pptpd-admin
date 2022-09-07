@@ -2,6 +2,7 @@
 ###  Технологии
 - [Python3.10](https://www.python.org/downloads/ "Python3.10")
 - [FastAPI](https://fastapi.tiangolo.com "FastAPI")
+- [VueJS] (https://v3.ru.vuejs.org/ "VueJS")
 - [PPP-VPN](https://packages.debian.org/bullseye/pptpd "ppp-vpn")
 - [Docker](https://docs.docker.com/engine/install/debian/ "Docker")
 
