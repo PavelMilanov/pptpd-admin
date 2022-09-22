@@ -29,7 +29,7 @@ class Shell:
     """Use shell-command over Python."""
 
     _CHAP_SECRETS_FILE = '/etc/ppp/chap-secrets'
-    _VPN_USERS: Dict[int, Dict] = {}
+    # _VPN_USERS: Dict[int, Dict] = {}
 
     def get_vpn_name(self) -> None:
         with open ('/etc/ppp/pptpd-options', 'r') as config:
@@ -59,11 +59,12 @@ class Shell:
         Returns: dick based on User model
         """
         with open(self._CHAP_SECRETS_FILE) as file:
+            vpn_users: Dict[int, Dict] = {}
             for count, line in enumerate(file.readlines(), start=-1):  # 2 lines config pass
                 if not line.startswith('#'):
                     try:
                         config_string = line.strip().split()
-                        self._VPN_USERS[(count-2)] = {
+                        vpn_users[(count-2)] = {
                             'client': config_string[0],
                             'server': config_string[1],
                             'secret': config_string[2],
@@ -71,7 +72,7 @@ class Shell:
                         }
                     except IndexError:
                         pass
-        return self._VPN_USERS
+        return vpn_users
 
     def get_user_by_client(self, request: str):
         """Get client, server, secret and ip from /etc/ppp/chap-secrets by request.
