@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  server:
+    container_name: FastAPI
+    build:
+      context: ./pptpd_admin
+      args:
+        - PORT=8000
+    ports:
+      - 8000:8000
+    restart: always
+  
+  web:
+    container_name: Vue
+    build:
+      context: ./vue
+    ports:
+      - 8001:5173
+    restart: always
+    depends_on:
+      - server

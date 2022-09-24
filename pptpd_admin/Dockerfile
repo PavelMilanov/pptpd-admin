@@ -1,7 +1,6 @@
 FROM python:3.10
 
-ARG p=8000
-ENV PORT=$p
+ARG PORT=8000
 
 RUN apt update
 
