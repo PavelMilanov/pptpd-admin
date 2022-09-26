@@ -1,7 +1,7 @@
 FROM debian:11
 
 ARG p=8000
-ENV PORT=$p
+ENV PORT=${p}
 
 RUN apt update && apt install -y python3 python3-pip
 COPY . /app
