@@ -2,6 +2,7 @@
 import { ref } from 'vue'
 import axios from 'axios'
 
+
 export default {
   data() {
     return { 
@@ -17,7 +18,7 @@ export default {
   methods: {
     generateTables() {
       axios.get(
-          'http://localhost:8000/api/v1/ppp/'  // { "3": { "client": "login", "server": "pptpd", "secret": "password", "ip": "*" }, "4": { "client": "login2", "server": "pptpd", "secret": "password2", "ip": "*" } }
+          `http://${import.meta.env.VITE_SERVER_IP}:8000/api/v1/ppp/`  // { "3": { "client": "login", "server": "pptpd", "secret": "password", "ip": "*" }, "4": { "client": "login2", "server": "pptpd", "secret": "password2", "ip": "*" } }
           ).then(
               response => this.data = response.data
           ).catch(err => {console.log(err)});

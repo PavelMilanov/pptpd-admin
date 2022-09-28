@@ -5,7 +5,6 @@ services:
     container_name: FastAPI
     build:
       context: ./pptpd_admin
-      dockerfile: build.Dockerfile
       args:
         - p=8000
     ports:
@@ -15,11 +14,13 @@ services:
     restart: always
   
   web:
-    container_name: Vue
+    container_name: Web
     build:
       context: ./vue
+      args:
+        - server_ip=localhost
     ports:
-      - 5173:5173
+      - 80:80
     restart: always
     depends_on:
       - server
