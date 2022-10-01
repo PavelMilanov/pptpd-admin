@@ -6,7 +6,7 @@ from schemas import pptpd
 app = FastAPI(
     title='Pptpd-admin API',
     description='Rest-API for fastapi with pptpd server.',
-    version='0.2',
+    version='0.2.0',
     prefix='/api/v1/'
 )
 
