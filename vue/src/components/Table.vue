@@ -1,5 +1,4 @@
 <script>
-import { ref } from 'vue'
 import axios from 'axios'
 
 
@@ -25,7 +24,7 @@ export default {
     },
     addUser() {
       axios.post(
-        'http://localhost:8000/api/v1/ppp/', {
+        `http://${import.meta.env.VITE_SERVER_IP}:8000/api/v1/ppp/`, {
           "client": this.form.client,
           "server": this.form.server,
           "secret": this.form.secret,
@@ -37,7 +36,7 @@ export default {
     },
     removeUser(client) {
       axios.delete(
-        `http://localhost:8000/api/v1/ppp/${client}/`, {}).then(responce => {
+        `http://${import.meta.env.VITE_SERVER_IP}:8000/api/v1/ppp/${client}/`, {}).then(responce => {
           this.generateTables()
           console.log(responce)
           }).catch(err => {console.log(err)})
